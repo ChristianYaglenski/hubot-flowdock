@@ -22,9 +22,18 @@ class Flowdock extends Adapter
     return if strings.length == 0
     self = @
     str = strings.shift()
-    if str.length > 8096
-      str = "** End of Message Truncated **\n" + str
-      str = str[0...8096]
+    chunkSize = 8096
+    if str.length > chunkSize
+      for i in [0..str.length] by chunkSize-3
+        msg = ''
+        msg = '...' unless i == 0
+        msg += str.slice i, i+chunkSize-3
+        msg += '...' if i == 0
+        self.send envelope, msg
+        start = (new Date).getTime()
+        while (new Date).getTime() < start + 10 #add 10ms delay to ensure messages appear in the proper order
+          continue
+      return
     metadata = envelope.metadata || envelope.message?.metadata || {}
     flow = metadata.room || envelope.room
     thread_id = metadata.thread_id
