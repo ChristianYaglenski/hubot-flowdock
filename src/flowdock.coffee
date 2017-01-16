@@ -23,8 +23,8 @@ class Flowdock extends Adapter
     self = @
     str = strings.shift()
     if str.length > 8096
-      str = "** End of Message Truncated **\n" + str
-      str = str[0...8096]
+      self.send(envelope, msg) for msg in str by 8096
+      return
     metadata = envelope.metadata || envelope.message?.metadata || {}
     flow = metadata.room || envelope.room
     thread_id = metadata.thread_id
