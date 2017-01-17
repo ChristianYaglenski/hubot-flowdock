@@ -22,8 +22,10 @@ class Flowdock extends Adapter
     return if strings.length == 0
     self = @
     str = strings.shift()
-    if str.length > 8096
-      self.send(envelope, msg) for msg in str by 8096
+    chunkSize = 8096
+    if str.length > chunkSize
+      str = str[0...chunkSize]
+      strings = str[chunkSize...] + strings
       return
     metadata = envelope.metadata || envelope.message?.metadata || {}
     flow = metadata.room || envelope.room
