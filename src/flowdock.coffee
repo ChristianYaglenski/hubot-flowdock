@@ -31,7 +31,7 @@ class Flowdock extends Adapter
         msg += '...' if i == 0
         self.send envelope, msg
         start = (new Date).getTime()
-        while (new Date).getTime() < start + 100 #add 100ms delay to ensure messages appear in the proper order
+        while (new Date).getTime() < start + 500 #add 500ms delay to ensure messages appear in the proper order
           continue
       return
     metadata = envelope.metadata || envelope.message?.metadata || {}
